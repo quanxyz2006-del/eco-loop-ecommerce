@@ -108,6 +108,45 @@ Catalog có 8 sản phẩm, cây danh mục 2 cấp và 4 bài viết. Giá, t�
 | Storefront responsive | Trang chủ, giới thiệu, tìm sản phẩm, chi tiết, tài khoản, giỏ hàng, thanh toán, tin tức và liên hệ. |
 | API & triển khai | REST API FastAPI, Swagger UI, MySQL/Alembic và Docker Compose với Caddy reverse proxy. |
 
+## Luồng xử lý và thuật toán chính
+
+- **Đăng ký/đăng nhập:** chuẩn hóa và kiểm tra email, băm mật khẩu trước khi lưu; gửi mã xác thực qua SMTP, chỉ xác nhận tài khoản khi mã băm khớp và mã còn hạn; đăng nhập trả JWT và kiểm tra role ở API quản trị.
+- **Tìm kiếm sản phẩm:** ghép các điều kiện từ khóa/danh mục/khoảng giá/chất liệu/trạng thái, sắp theo thời điểm tạo mới nhất và phân trang ở truy vấn cơ sở dữ liệu thay vì tải toàn bộ danh sách lên trình duyệt.
+- **Tạo đơn:** máy chủ đọc lại giá và tồn kho hiện hành, kiểm tra số lượng, tính tổng bằng số thập phân và áp voucher hợp lệ; lưu đơn, trừ kho và đánh dấu voucher đã dùng trong cùng transaction để tránh dùng mã lặp.
+- **Hủy đơn:** khi đơn chuyển sang trạng thái hủy lần đầu, hoàn số lượng hàng và mở lại voucher đã dùng theo transaction.
+- **Đánh giá:** yêu cầu JWT; mỗi tài khoản có một đánh giá cho mỗi sản phẩm, gửi lại sẽ cập nhật đánh giá hiện có.
+- **Thu cũ đổi mới:** quản trị viên duyệt yêu cầu; chỉ yêu cầu được duyệt mới nhận mã voucher ngẫu nhiên giảm 10%, dùng một lần.
+- **Chatbot:** ghép FAQ cửa hàng với catalog hiện hành làm ngữ cảnh cho Gemini; giới hạn tốc độ theo IP và trả lời FAQ dự phòng khi API key chưa cấu hình hoặc Gemini lỗi.
+
+Các bước kiểm tra quyền và validation được thực hiện ở backend; giao diện chỉ hiển thị luồng tương ứng, không được xem là ranh giới bảo mật.
+
+## Cấu trúc thư mục dự án
+
+```text
+eco-loop-ecommerce/
+├── backend/
+│   ├── app/
+│   │   ├── api/v1/routers/     # Auth, catalog, orders, content, admin, chatbot, trade-in
+│   │   ├── core/               # Cấu hình, database, JWT và dependency quyền
+│   │   ├── models/             # SQLAlchemy entities/relationships
+│   │   ├── repositories/       # Truy cập dữ liệu dùng chung
+│   │   ├── schemas/            # Pydantic request/response validation
+│   │   └── services/           # Logic commerce, seed, email verification
+│   └── migrations/versions/    # Alembic migrations
+├── database/                   # Schema và seed data mẫu
+├── docs/                       # API, yêu cầu nghiệp vụ, nguồn dữ liệu
+├── frontend/
+│   ├── pages/                  # Storefront, tài khoản và admin
+│   └── public/
+│       ├── css/                # Stylesheets
+│       ├── js/                 # Các module giao diện theo trang
+│       └── images/             # Ảnh tĩnh; QR cá nhân được cấu hình riêng
+├── scripts/                    # Khởi tạo Docker và di chuyển SQLite → MySQL
+├── Caddyfile                   # Reverse proxy
+├── Dockerfile                  # Image ứng dụng FastAPI
+└── compose.yaml                # App, MySQL và Caddy
+```
+
 ### Cấu hình riêng khi triển khai
 
 Không commit `.env`, khóa Gemini/Gmail, mật khẩu hoặc ảnh QR ngân hàng cá nhân. Tạo cấu hình riêng từ `backend/.env.example`; nếu cửa hàng dùng QR chuyển khoản, hãy cung cấp ảnh QR của chính cửa hàng trên môi trường triển khai riêng. Dữ liệu trong catalog demo được đánh dấu là minh họa.
