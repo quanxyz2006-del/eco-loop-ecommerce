@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 venv/
+.venv/
 .env
 .vscode/
 .idea/
@@ -9,3 +10,4 @@ venv/
 *.db
 .DS_Store
 Thumbs.db
+frontend/public/images/payment-qr.png

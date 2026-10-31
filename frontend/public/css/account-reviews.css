@@ -1,0 +1,24 @@
+.field[hidden],[hidden]{display:none!important}
+.account-tabs{display:flex;gap:10px;margin-bottom:20px}
+.account-tabs button,.button,.nav-actions a{transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,opacity .18s ease}
+.account-tabs button:hover,.button:hover,.nav-actions a:hover{transform:translateY(-1px)}
+.button:disabled{opacity:.58;cursor:wait;transform:none}
+.is-authenticated{max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.product-info{padding:20px;margin-top:20px;transition:box-shadow .2s ease}
+.product-info:hover,.review-card:hover{box-shadow:0 12px 28px #183e2b12}
+.reviews{margin-top:32px;padding-top:26px;border-top:1px solid var(--line)}
+.reviews .title{margin:7px 0 10px}
+.review-form{display:grid;gap:9px;margin:18px 0 22px;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--paper)}
+.review-form label{font-size:12px;font-weight:700;color:#43564b}
+.review-form select,.review-form textarea{width:100%;border:1px solid #d9dfd6;background:#fff;border-radius:11px;padding:11px 12px;color:var(--ink);font:inherit}
+.review-form textarea{min-height:85px;resize:vertical}
+.review-form select:focus,.review-form textarea:focus{outline:2px solid #79947755;border-color:var(--moss)}
+.review-form .button{justify-self:start;margin-top:4px}
+.review-list{display:grid;gap:11px;margin-top:16px}
+.review-card{padding:16px;border-radius:15px;background:var(--paper);border:1px solid var(--line);transition:box-shadow .2s ease}
+.review-card-head{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.review-card p{margin:9px 0;color:var(--ink);font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
+.review-card time{font-size:11px;color:var(--muted)}
+.review-stars{color:#c77542;letter-spacing:2px;white-space:nowrap}
+@media(max-width:700px){.nav-actions a[href="/account.html"]{display:inline-flex}.is-authenticated{max-width:110px}.review-card-head{align-items:flex-start;flex-direction:column;gap:4px}.account-tabs{position:sticky;top:0;z-index:2;background:var(--paper);padding:5px 0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
